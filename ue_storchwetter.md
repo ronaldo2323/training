@@ -24,7 +24,7 @@ C. V.
 M. O. 
 
 **Last modification** 
-Das wäre dann auch euere commit message in github (ohne Datum)
+
 29.04.2013 - Kleine Aenderungen und Umstellung auf Markdown-Format für Github
 22.11.2013 - Korrektur einiger Fehler und Umstrukturierung (C.Vick)
 19.11.2013 - Umstrukturierung und Dokumentation (M.Otto)
@@ -37,83 +37,18 @@ Ausgabe der vorprozessierten Daten in eine Datei
 
 
 ### Setup R Umgebung
-set working directory (Wo wollt ihr speichern und laden? Am besten ein Projektordner anlegen)
-Denkt daran **DEN PFAD ZU ÄNDERN!** Nicht jeder PC hat z.B. den Laufwerksbuchstaben d:\ 
-Achtung KEINEN Backslash(\) am Ende des Pfades
-
+set working directory 
 ```{r}
-setwd("d:/TUB/Lehre/SoSe14/GP_OEKUP_OP_LA_Stadtklima_Berlin/R/data_r/") 
+setwd("/users/blahblahblah/documents/storchtraining")
 ```
 
 ```{r}
 getwd() 
 ```
-Gegenstück, um zu überprüfen eurer aktuellen **working direktory** (Pfad zum aktuellen **Arbeitsordner**)
-
-### HILFE 
-
-zunächt **Denk positiv!** und **nutzte das Web** und **ISIS-Forum** dann ERST die **Betreuer** (siehe author)!
-
-Bei Fragen zu einzelnen Funktionen schreibt '?Funktionsname' in die Konsole tippen z.B. ?plot
-
-```{r}
- ?plot
-```
-
-Wenn ihr den Funktionsnamen nicht vollstaendig kennt geht auch:
-
-```{r}
- ?plo
-```
-Hier noch einige nützliche Links wo ihr Hilfe bekommen könnt:
-
-Quick R: http://www.statmethods.net/
-R Cookbook: http://www.cookbook-r.com/
-R-Bloggers: http://www.r-bloggers.com/
-StackOverflow About R: http://stackoverflow.com/tags/r/info
-StackOverflow R FAQ: http://stackoverflow.com/questions/tagged/r-faq
-
-
-### Installiere die noch fehlenden Pakete 
-R hat eine Grundausstattung aber die "community" ist ständig am erweitern der Funktionalitäten - damit nicht jedes mal R neu auf dem PC installiert werden muss gibt es sog. **packages**)
-
-lädt das Paket herunter wenn ihr diese Paket erstmalig verwendet 
-(später nicht mehr nötig - BITTE den Chunk-Container entfernen!!!)
-installed.packages() auf der Konsole zeigt euch alle installierten Pakete an
-
-```{r}
-install.packages("modeest")
-```
-aktiviert das Paket
-```{r}
-library("modeest")
-```
-mehr zum Thema Pakte installieren findet ihr unter: 
-http://www.r-bloggers.com/installing-r-packages/
-
-
-### Daten e(E)inlesen und Daten vorprozessieren
-
-_Hinweis_
-bei allen Objekten (so organisiert R die Daten intern) in R, immer das selbe Prinzip:
-
-'name des Objekts' (kann frei gewählt werden) <- (Zuordnungspfeil) objektname' (Funktionen, Variablen oder abstrakte Werte)
-
-Objektnamen sollten interpretierbar sein (Achtung R ist Case sensetive!)
-z.B. T_mittel für Temperaturmittel statt nur 'x' 
-
- _ACHTUNG:_ wenn eure working directory nicht richtig angelegt ist, findet er im Folgenden keine Datei!!!
 
 ```{r}
 wetter <- read.table (file="storch_wetterdaten.txt", header=TRUE)
 ```
-
-dem Variablennamen 'wetter' wird etwas zugeordnet (schau mal bitte unter 
-dem Reiter Workspace nach):
-**read.table** ist eine Funktion, der Argumente übergeben werden (in der runden Klammer) 
-z.B. ein Datensatz mit file = 'meineDatensindindieserDatei.txt'.
-(Weitere Informationen mit '?read.table' könnt ihr die Hilfe auf der Kommandozeile aufrufen dort steht erklärt, was z.B. das Schlüsselwort 'header' macht 
-(man gibt damit an ob oder ob nicht die erste Zeile im Datensatz der Spaltennamen besitzt, TRUE heißt: ja!)
 
 einlesen der Populationsdaten
 ```{r}
@@ -127,9 +62,7 @@ anzeigen des Kopfes eines Datenblattes: Spalten mit Namen und die ersten 6 Eintr
 head(wetter)
 ```
 
-anzeigen der Struktur des Objekts (geht mit fast allem? auch funktionen);
-bei Datensätzen ist das eine Liste der Spalten mit den dazugehörigen 
-Variablentypen! (wichtig!)
+anzeigen der Struktur des Objekts 
 
 ```{r}
 str(wetter)
@@ -142,11 +75,7 @@ Namen der Spalten ändern für bessere Handhabbarkeit? 'names(wetter)' zeigt die
 ```{r}
 names(wetter) <- c ("date","temp","dewp","slp","stp","wdsp","mxspd","tmax","tmin","prcp")
 ```
-
-'?c' Funktion die ihre Argumente kombiniert (combine) und in eine Variable packt. Hier in desem Fall die neuen Namen der Variablen zur besseren Lesbarkeit
-
-damit die Spalten als eigene Vektoren (Vektor: Variable mit mehreren Werten vom selben Typ; eindimensional) abrufbar sind 
-'?attach' in die Konsole gibt euch mehr Informationen zur Funktion
+The database is attached to the R search path
 
 ```{r}
 attach(wetter)
@@ -178,30 +107,16 @@ Ok, weiter gehts:
 ```{r}
 str(date)
 ```
-Das Datum ist "nur" als Integer-Klasse gespeichert (also als natürliche Zahlen ohne Komma), 
-Wir müssen R daher noch sagen das:
-1. ein Datum gemeint ist und 
-2. Wie die Zahl zu interpretieren ist, 
 
-heißt also den Variablentyp von wetter$date ändern (format="%year%month%day" oder wie wir es hier machen abgekürzt als format="%Y%m%d"):
 
 ```{r}
 wetter$date <- strptime(date, format="%Y%m%d")
 ```
 
-mehr zu Variablentypen in R findet ihr unter 
-http://www.statmethods.net/input/datatypes.html
-
-mit dem $-Zeichen weiß R, dass wir von 'wetter' nur das 'date' benutzen wollen 
-da wir die Ergebnisse der Funktion strptime sofort mit <- zuweisen wird die Spalte 'date' gleich überschrieben (allerdings nur hier im R workspace/Arbeitsspeicher, die Urliste bleibt
-natürlich unberührt) mehr zu date-time conversion (Umwandlung in Zeitangaben) siehe ?strptime
-
 wir haben nun Grundlegendes geändert, deswegen 'attach()' zum überschreiben der "alten" Variablennamen im Arbeitsspeicher
 ```{r}
 attach(wetter)
 ```
-
-Alles chic?
 
 ```{r}
 str(date) 
@@ -212,22 +127,11 @@ Zusammenfassen der Daten, erster Überblick über Datenstruktur/Qualität mit:
 summary(wetter)
 ```
 
-**bei einigen max-Werten stehen zu hohe Werte!**
-Bei dewp, stp, wdsp, mxspd, max und prcp scheint 999.9 bzw 9999.9 oder 99.99 ein Fehlerwert zu sein (es gibt auf der Erde keine Messstationen mit einer Windgeschwindigkeit von z.B. 999.9 km/h)
-Die funktion summary () ist eine einfacher Art die Konsistenz der Daten zu prüfen 
-Prüfen auf Fehlwerte über z.B: unlogische Werte wenn keine Meta-Daten (Daten über die Daten vorhanden)! 
-Wir ändern den Fehlerwert auf 'NA' (sind nicht viele) - eine Standartformat (Platzhalter) 
-für Fehlwerte in R - damit R sie auch nicht berücksichtigt z.b. bei Diagrammen
-**Indizierung**: eckige Klammern werden benutzt, wenn ich nicht alle Werte 
-nehmen will, sondern nur Werte die eine Eigenschaft haben (Position ist auch eine 
-Eigenschaft bsp.: temp[4] # heißt die vierte Stelle im 'temp'-vektor)
-
 ```{r}
 temp[4]
 ```
-Unsere Eigenschaft ist, dass dieser spezielle Fehlerwert erreicht wird:
-die einzelnen Spalten werden wieder überschrieben diesmal aber nur an diesen Stellen und zwar mit dem "Wert" 'NA' dabei ist "==" ein sog. Vergleichsoperator d.h. in diesen Fall z.B.:
-"indiziere wo dewp genau gleich 9999.9" und schreibe NA rein.
+
+indiziere wo dewp genau gleich 9999.9" und schreibe NA rein.
 
 ```{r}
 wetter$dewp [dewp==9999.9] <- NA
@@ -243,10 +147,6 @@ wetter$prcp [prcp==99.99] <- NA
 ```
 
 
-Bei prcp ist außerdem selbst das 0.75 Quantil noch bei 0.00 (siehe Konsolenausgeabe
-von summary())! Mindestens mehr als dreimal so viele niederschlagslose Tage wie Tage mit Niederschlag?
-Das hat mich stuzig gemacht, ist immerhin Mecklenburg-Vorpommern also 
-eigentlich humides Klima:
 
 ```{r}
 plot(date,wetter$prcp, xlab="Zeit [Jahre]", ylab="Niederschlag [inch/Tag]")
@@ -349,13 +249,15 @@ Variablennamen im Arbeitsspeicher
 ```{r}
 attach(wetter)
 ```
-Doch warum haben wir jetzt 352 Zeilen damit verschwendet nur den Datensatz zu "verschönern"?
-In Zukunft werdet ihr einfach fertige kleine Skripte schreiben, die ihr dann immer und immer 
-wieder auf die Daten loslassen könnt um sie vorzubereiten (Vorprozessierung). Diese werden in 
-Dateien fest abgelegt (ACHTUNG momentan liegt alles im Arbeitsspeicher eures PC, wenn der 
-ausgeschaltet ist müsst ihr alles oberhalb dieser Anmerkungen nochmal durchlaufen lassen - ist 
-bei kleinen Datensätzen wie diese hier auch nicht so schlimm)
-**Übung: Findet herraus, wie man das objekt "wetter" als datensatz auf eure Festplatte speichert (nutzt Github)**
+<<<<<<< HEAD
+Speichern von "wetter" auf der Festplatte im Arbeitsverzeichnis (wd)
+
+
+
+```{r}
+save(wetter, file="wetter.saved")
+```
+
 
 ### 2. Analyse der Daten (Datenv(V)erabeitung)     
 
@@ -434,7 +336,7 @@ nach und nach zu professionalisieren mit befehlen wie 'lines' und 'points' und '
 ! library(help = "graphics") 
 **Übung: Bitte mal selbständig herrausfinden, wie man die Achsen richtig beschrifftet**
 ```{r}
-hist(temp)
+hist(temp, xlab="Temperatur in ºC", ylab="Häufigkeit",main="Mittlere Temperatur in Waren Müritz")
 ```
 
 Boxplot
